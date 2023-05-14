@@ -1,4 +1,4 @@
-@echo off
+::@echo off
 setlocal enabledelayedexpansion 
 set month[0]=01_Janvier
 set month[1]=02_Fevrier
@@ -41,7 +41,9 @@ FOR /L %%i IN (!starting_year! 1 !actual_year! ) DO (
 	
 
 REM create csv with files metadatas
-exiftool.exe -filename -createdate -directory -r -T -n !source_folder!> temp.csv
+IF !use_recursive!==TRUE ( exiftool.exe -filename -createdate -directory -r -T -n !source_folder!> temp.csv ) 
+IF !use_recursive!==FALSE ( exiftool.exe -filename -createdate -directory -T -n !source_folder!> temp.csv )
+
 
 REM parse the csv file
 for /f "usebackq tokens=1-3 delims=	" %%a in ("temp.csv") do (
@@ -66,7 +68,7 @@ REM move the file in the write year/month
 	if !creation_month!==11 ( move !file_directory!\\!file_name! !target_folder!\\!creation_year!\%month[10]% )
 	if !creation_month!==12 ( move !file_directory!\\!file_name! !target_folder!\\!creation_year!\%month[11]% ))
       
-del "temp.csv"
+::del "temp.csv"
 
 REM delete recursively empty directories
 if !delete_empty_folders!==TRUE ( 
