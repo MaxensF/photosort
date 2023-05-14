@@ -35,10 +35,14 @@ REM create csv with files metadatas
 ::IF !use_recursive!==FALSE ( exiftool.exe -filename -createdate -directory -T -n !source_folder!> temp.csv )
 IF !use_recursive!==TRUE (
 	forfiles /P !source_folder! /S /M *.jpg /C "cmd /c echo @file,@fdate,@path ">temp.csv
-	forfiles /P !source_folder! /S /M *.png /C "cmd /c echo @file,@fdate,@path ">>temp.csv )
+	forfiles /P !source_folder! /S /M *.png /C "cmd /c echo @file,@fdate,@path ">>temp.csv
+	forfiles /P !source_folder! /S /M *.jpeg /C "cmd /c echo @file,@fdate,@path ">>temp.csv
+	forfiles /P !source_folder! /S /M *.tif /C "cmd /c echo @file,@fdate,@path ">>temp.csv	)
 IF !use_recursive!==FALSE (
 	forfiles /P !source_folder! /M *.jpg /C "cmd /c echo @file,@fdate,@path ">temp.csv
-	forfiles /P !source_folder! /M *.png /C "cmd /c echo @file,@fdate,@path ">>temp.csv )
+	forfiles /P !source_folder! /M *.png /C "cmd /c echo @file,@fdate,@path ">>temp.csv
+	forfiles /P !source_folder! /M *.jpeg /C "cmd /c echo @file,@fdate,@path ">>temp.csv
+	forfiles /P !source_folder! /M *.tif /C "cmd /c echo @file,@fdate,@path ">>temp.csv	)
 
 REM get the year of the oldest picture
 REM parse the csv file
@@ -81,7 +85,7 @@ REM move the file in the write year/month
 	if !creation_month!==11 ( move !file_path! !target_folder!\\!creation_year!\%month[10]% )
 	if !creation_month!==12 ( move !file_path! !target_folder!\\!creation_year!\%month[11]% ))
       
-::del "temp.csv"
+del "temp.csv"
 
 REM delete recursively empty directories
 if !delete_empty_folders!==TRUE ( 
